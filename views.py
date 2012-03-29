@@ -7,7 +7,7 @@ from util import make_status_response
 from util import generate_filename
 
 
-def add_vehicle():
+def add_record():
     if not request.json:
         app.logger.error("Expected JSON, but POSTed data was %s", request.data)
         return abort(400)
@@ -19,5 +19,6 @@ def add_vehicle():
 
     with open(generate_filename(app.config), 'a') as trace_file:
         for record in records:
-            trace_file.write(json.dumps(record))
+            timestamp = record.pop('timestamp')
+            trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
     return make_status_response(201)

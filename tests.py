@@ -3,7 +3,7 @@ import unittest2 as unittest
 import os.path
 import json
 
-from util import to_json, generate_filename
+from util import generate_filename
 from recorder import create_app
 
 
@@ -26,11 +26,11 @@ class RecordTestCase(BaseRecorderTestCase):
         ]}
         filename = generate_filename(self.app.config)
         assert not os.path.exists(filename)
-        self.client.post('/records', data=to_json(data),
+        self.client.post('/records', data=json.dumps(data),
                 content_type='application/json')
         assert os.path.exists(filename)
         for line in open(filename):
-            record = json.loads(line)
+            record = json.loads(line.split(':', 1)[1])
             assert record['name'] == 'steering_wheel_angle'
 
 if __name__ == '__main__':

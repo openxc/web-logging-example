@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import os
+import errno
+
 from flask import Flask
 
 import views
@@ -14,6 +17,14 @@ def create_app(config=None):
     if config:
         app.config.update(config)
     setup_routes(app)
+
+    try:
+        os.mkdir(app.config['TRACE_FOLDER'])
+    except OSError as exc:
+        if exc.errno == errno.EEXIST:
+            pass
+        else: raise
+
     return app
 
 app = create_app()
