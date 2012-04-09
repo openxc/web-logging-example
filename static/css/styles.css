@@ -1,0 +1,267 @@
+/* Base styles */
+
+body {
+  background-color: #FFF;
+  color: #000;
+  background: #f7f7f7 url('images/header-background.gif') repeat-x;
+  font-family: "Lucida Grande","Lucida Sans Unicode",verdana,helvetica,sans-serif;
+}
+
+a img {
+  border: 0;
+}
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+em {
+  font-style: italic;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: .1em 0 .2em 0;
+  font-weight: bold;
+  clear: both;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: .1em 0 .2em 0;
+}
+
+p, address {
+  margin: 0 0 15px 0;
+}
+
+address span {
+  display: block;
+}
+
+dl {
+  margin: 10px 0;
+}
+
+dl dt {
+  font-weight: bold;
+}
+
+dl.attributes dt {
+  float: left;
+  clear: left;
+  width: 150px;
+}
+
+dl.attributes dd {
+  margin: 0 0 0 160px;
+}
+
+ul {
+  margin: 5px;
+}
+
+ul li {
+  padding: 3px 0;
+}
+
+table {
+  border-bottom:3px solid #B2B2B2;
+  margin:0 0 2em;
+}
+
+caption {
+  padding: 0.75em; font: 1.5em Georgia, Times, serif;
+  border: 1px solid #B2B2B2; border-width: 1px 0 2px;
+  background: #EEE;
+}
+
+th, td {
+  padding: 0.5em .6em;
+  border: 1px solid #CCC;
+  border-width: 0 1px 1px 1px;
+}
+
+thead th {
+  text-transform: uppercase; text-align: left;
+  font-size: 65%;
+}
+
+tbody th {
+  width: 20%;
+}
+
+tfoot {
+  display: none;
+}
+
+tbody tr.even td {
+  background-color: #eee;
+}
+
+tbody tr.odd  td {
+  background-color: #fff;
+}
+
+nav {
+    font-family: "Lucida Grande","Lucida Sans Unicode",verdana,helvetica,sans-serif;
+    font-weight: 700;
+    margin: 0;
+    padding: 6px 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 0;
+}
+
+nav a, nav a.selected {
+    background: none repeat scroll 0 0 #316783;
+    border-radius: 15px 15px 15px 15px;
+    color: #FFFFFF;
+    font-size: 13px;
+    margin-left: 12px;
+    padding: 4px 10px 6px 11px;
+}
+
+#flash_notice, #flash_error, #flash_alert, .error {
+    text-align: center;
+    font-size: 14px;
+    padding: 3px 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#flash_notice, .notice {
+    background-color: #ccffcc;
+    border: solid 1px #66cc66;
+}
+
+#flash_error, #flash_alert, .error {
+    background-color: #ffcccc;
+    border: solid 1px #cc6666;
+}
+
+/* Site sections */
+
+#header {
+  height: 60px;
+  overflow: visible;
+}
+
+#logo {
+    font-family: Georgia,serif;
+    font-weight: bold;
+    color: #FFF;
+    font-family: Georgia,serif;
+    font-size: 26px;
+    line-height: 120%;
+    margin-top: 5px;
+    padding-bottom: 24px;
+}
+
+#footer {
+  border-color: #666;
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  margin: 1em 3em;
+}
+
+#map {
+  margin-left: auto;
+  margin-right: auto;
+  height: 300px;
+  width: 500px;
+}
+
+/* Slideshow */
+
+ul.slideshow {
+  list-style-type: none;
+  height: 510px;
+  width: 700px;
+  margin: 0;
+}
+
+.slideshow li {
+    padding: 0;
+    margin: 0;
+}
+
+.slideshow li img {
+  padding: 10px;
+  border: 1px solid #000;
+  background-color: #EEE;
+}
+
+/* form field properties */
+
+fieldset {
+  border: 1px solid transparent;
+  border-top: 1px dashed #888888;
+  padding: 20px 0 0;
+}
+
+fieldset legend {
+  color: #888888;
+  float: right;
+}
+
+label {
+  padding: 5px 0;
+  font-weight: bold;
+}
+
+textarea {
+  display: block;
+}
+
+input[type=checkbox] {
+  display: inline;
+}
+
+label span {
+  color: #888888;
+}
+
+fieldset .fieldpair {
+  padding-bottom: 10px;
+}
+
+/* Buttons */
+
+.controls form, form.controls {
+  display: inline;
+}
+
+.controls a, a.button, button {
+  background-color: #f5f5f5;
+  color: #565656;
+  border: 1px solid #dedede;
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 3px 2px 2px 3px;
+  margin: 5px 1px 5px 1px;
+}
+
+button img, .controls a img, a.button img {
+  margin: 0 3px -3px 0 !important;
+  padding: 0;
+  border: none;
+  width: 16px;
+  height: 16px;
+}
+
+button:hover, .controls a:hover, a.button:hover {
+  background-color: #dff4ff;
+  border: 1px solid #c2e1ef;
+  color: #336699;
+}

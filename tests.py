@@ -3,6 +3,8 @@ import unittest2 as unittest
 import os.path
 import json
 
+from flask import url_for
+
 from util import generate_filename
 from recorder import create_app
 
@@ -33,5 +35,10 @@ class RecordTestCase(BaseRecorderTestCase):
             record = json.loads(line.split(':', 1)[1])
             assert record['name'] == 'steering_wheel_angle'
 
+class VisualizationTestCase(BaseRecorderTestCase):
+        
+    def test_no_data(self):
+        response = self.client.get(url_for('visualization'))
+        assert 'class="vehicle"' in response.data
 if __name__ == '__main__':
     unittest.main()

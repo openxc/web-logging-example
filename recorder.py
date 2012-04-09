@@ -8,6 +8,9 @@ import views
 
 
 def setup_routes(app):
+    app.add_url_rule('/', 'index', views.visualization, methods=['GET'])
+    app.add_url_rule('/visualization', 'visualization', views.visualization,
+            methods=['GET'])
     app.add_url_rule('/records', 'add_record', views.add_record,
             methods=['POST'])
 
