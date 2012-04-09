@@ -1,9 +1,22 @@
 import json
+from collections import deque
 
 from flask import request, render_template
 from flask import current_app as app, abort
 
 from util import make_status_response, generate_filename, jsonify
+
+
+RECORDS_QUEUE = deque(maxlen=100)
+
+def _prime_records_queue(q):
+    with open(generate_filename(app.config), 'r') as trace_file:
+        for line in trace_file:
+            if len(RECORDS_QUEUE) == RECORDS_QUEUE.maxlen:
+                break
+            timestamp, record = line.split(':', 1)
+            record = json.loads(record)
+            RECORDS_QUEUE.append(record)
 
 
 def add_record():
@@ -24,7 +37,8 @@ def add_record():
 
 
 def show_records():
-    return jsonify(records=[{'name': 'vehicle_speed'}])
+    _prime_records_queue(RECORDS_QUEUE)
+    return jsonify(records=list(RECORDS_QUEUE))
 
 
 def visualization():
