@@ -33,6 +33,8 @@ def add_record():
         for record in records:
             timestamp = record.pop('timestamp')
             trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
+            record['timestamp'] = timestamp
+            RECORDS_QUEUE.append(record)
     return make_status_response(201)
 
 
