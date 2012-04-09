@@ -3,8 +3,7 @@ import json
 from flask import request, render_template
 from flask import current_app as app, abort
 
-from util import make_status_response
-from util import generate_filename
+from util import make_status_response, generate_filename, jsonify
 
 
 def add_record():
@@ -22,6 +21,11 @@ def add_record():
             timestamp = record.pop('timestamp')
             trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
     return make_status_response(201)
+
+
+def show_records():
+    return jsonify(records=[{'name': 'vehicle_speed'}])
+
 
 def visualization():
     return render_template('visualization.html')

@@ -13,6 +13,8 @@ def setup_routes(app):
             methods=['GET'])
     app.add_url_rule('/records', 'add_record', views.add_record,
             methods=['POST'])
+    app.add_url_rule('/records', 'show_records', views.show_records,
+            methods=['GET'])
 
 def create_app(config=None):
     app = Flask(__name__)
