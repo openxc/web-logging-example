@@ -1,12 +1,16 @@
 import json
 import time
 from xml.etree import ElementTree as ET
+from Queue import Queue
 
 from flask import request, render_template, Response
 from flask import current_app as app, abort
 
 from util import make_status_response, generate_filename, jsonify
-from util import massage_record, RECORDS_QUEUE, request_wants_json
+from util import massage_record, request_wants_json
+
+
+LIVESTREAM_QUEUE = Queue(maxsize=1000)
 
 
 def _generate_gpx(records):
@@ -33,11 +37,6 @@ def _generate_gpx(records):
     return ET.ElementTree(root)
 
 
-def show_gpx():
-    return Response("<?xml version=\"1.0\" ?>" +
-            ET.tostring(_generate_gpx(RECORDS_QUEUE).getroot()),
-            mimetype='application/xml')
-
 def add_record():
     if not request.json:
         app.logger.error("Expected JSON, but POSTed data was %s", request.data)
@@ -53,18 +52,17 @@ def add_record():
             timestamp = record.pop('timestamp')
             trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
             record = massage_record(record, timestamp)
-            RECORDS_QUEUE.append(record)
+            LIVESTREAM_QUEUE.put(record)
     return make_status_response(201)
 
 
 def show_records():
     ws = request.environ.get('wsgi.websocket', None)
     if request_wants_json():
-        return jsonify(records=list(RECORDS_QUEUE))
+        return jsonify(records=[])
     elif ws is not None:
         while True:
-            ws.send(json.dumps(RECORDS_QUEUE[0]))
-            time.sleep(1)
+            ws.send(json.dumps(LIVESTREAM_QUEUE.get()))
     return make_status_response(400)
 
 

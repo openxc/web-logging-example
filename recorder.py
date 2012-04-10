@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 from gevent.pywsgi import WSGIServer
-from geventwebsocket.handler import WebSocketHandler
 from flask import Flask
 
 import views
-from util import generate_filename, massage_record, prime_records_queue
-from util import RECORDS_QUEUE, make_trace_folder
+from handler import PatchedWebSocketHandler
+from util import generate_filename, massage_record, make_trace_folder
 
 
 def setup_routes(app):
@@ -16,8 +15,6 @@ def setup_routes(app):
             methods=['POST'])
     app.add_url_rule('/records', 'show_records', views.show_records,
             methods=['GET'])
-    app.add_url_rule('/gpx', 'show_gpx', views.show_gpx,
-            methods=['GET'])
 
 
 def create_app(config=None):
@@ -27,7 +24,6 @@ def create_app(config=None):
         app.config.update(config)
     setup_routes(app)
     make_trace_folder(app)
-    prime_records_queue(app, RECORDS_QUEUE)
     return app
 
 
@@ -35,5 +31,5 @@ app = create_app()
 
 if __name__ == '__main__':
     app = create_app()
-    server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    server = WSGIServer(('', 5000), app, handler_class=PatchedWebSocketHandler)
     server.serve_forever()

@@ -103,27 +103,25 @@ $(document).ready(function() {
         },
         plotOptions: {
            series: {
-              cursor: 'pointer',
-              point: {
-                 events: {
-                    click: function() {
-                       hs.htmlExpand(null, {
-                          pageOrigin: {
-                             x: this.pageX,
-                             y: this.pageY
-                          },
-                          headingText: this.series.name,
-                          maincontentText: Highcharts.dateFormat(
-                              '%A, %b %e, %Y', this.x) + ':<br/> ' + this.y +
-                              ' visits',
-                          width: 200
-                       });
-                    }
-                 }
-              },
               marker: {
                  lineWidth: 1
               }
+           },
+           spline: {
+                dataLabels: {
+                enabled: true,
+                formatter: function() {
+                    // return this.series.name;
+                    if (!this.series.inc) this.series.inc = 1;
+
+                    if (this.series.inc >= parseInt(this.series.data.length)) {
+                        this.series.inc = 0;
+                        return this.point.y;
+                    }
+                    this.series.inc++;
+                }
+            }
+
            }
         }
     }
@@ -159,22 +157,14 @@ $(document).ready(function() {
             data: speedSeries});
 
         chart = new Highcharts.Chart(options);
-        setInterval(function() {
-            var x = (new Date()).getTime();
-            var y = Math.random();
 
-            x = (new Date()).getTime();
-            y = Math.random();
-            chart.series[1].addPoint([x, y], true, true);
-        }, 1000);
+        var ws = new WebSocket("ws://" + document.domain + ":5000/records");
+        ws.onmessage = function (theEvent) {
+            var data = $.parseJSON(theEvent.data);
+            if(data.name === "fuel_consumed_since_restart") {
+                chart.series[0].addPoint([data.timestamp, data.value], true, false);
+            }
+        };
 
     }, 'json');
-
-    var ws = new WebSocket("ws://" + document.domain + ":5000/records");
-    ws.onmessage = function (theEvent) {
-        var data = $.parseJSON(theEvent.data);
-        if(data.name === "fuel_consumed_since_restart") {
-            chart.series[0].addPoint([data.timestamp, data.value], true, true);
-        }
-    };
 });

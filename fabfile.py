@@ -36,7 +36,8 @@ def setup():
 
 def runserver():
     """Run the development web server."""
-    local("python recorder.py")
+    local("gunicorn -b 0.0.0.0:5000 --workers=2 "
+            "--worker-class=\"workers.GeventWebSocketWorker\" recorder:app")
 
 def test():
     """Run the test suite."""
