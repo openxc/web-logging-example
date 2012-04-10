@@ -21,6 +21,7 @@ class BaseRecorderTestCase(unittest.TestCase):
         self.app.test_request_context().push()
 
     def tearDown(self):
+        print "erasing %s " % self.app.config['TRACE_FOLDER']
         shutil.rmtree(self.app.config['TRACE_FOLDER'])
 
 
@@ -33,11 +34,14 @@ class RecordTestCase(BaseRecorderTestCase):
                     'value': 39.0},
             {'timestamp': 1332975699.078000, 'name': 'vehicle_speed',
                     'value': 31.0},
-            {'timestamp': 1332975698.078000, 'name': 'fuel_consumption',
+            {'timestamp': 1332975698.078000, 'name':
+                'fuel_consumed_since_restart',
                     'value': 0.017},
-            {'timestamp': 1332975699.078000, 'name': 'fuel_consumption',
+            {'timestamp': 1332975699.078000, 'name':
+                'fuel_consumed_since_restart',
                     'value': 0.02},
-            {'timestamp': 1332975700.078000, 'name': 'fuel_consumption',
+            {'timestamp': 1332975700.078000, 'name':
+                'fuel_consumed_since_restart',
                     'value': 0.023},
             {'timestamp': 1332975697.078000, 'name': 'latitude',
                     'value': 42.0},
@@ -54,7 +58,8 @@ class RecordTestCase(BaseRecorderTestCase):
         assert os.path.exists(filename)
         for line in open(filename):
             record = json.loads(line.split(':', 1)[1])
-            assert record['name'] in ('vehicle_speed', 'fuel_consumption',
+            assert record['name'] in ('vehicle_speed',
+                    'fuel_consumed_since_restart',
                     'longitude', 'latitude')
 
     def test_retreive_records(self):
@@ -64,8 +69,8 @@ class RecordTestCase(BaseRecorderTestCase):
         assert 'records' in response.data
         data = json.loads(response.data)
         record = data['records'][0]
-        assert record['name'] in ('vehicle_speed', 'fuel_consumption',
-                'longitude', 'latitude')
+        assert record['name'] in ('vehicle_speed',
+                'fuel_consumed_since_restart', 'longitude', 'latitude')
 
 
 class GpxTestCase(BaseRecorderTestCase):

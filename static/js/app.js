@@ -1,67 +1,3 @@
-var options = {
-    chart: {
-       renderTo: 'chart'
-    },
-    legend: {
-        enabled: false
-    },
-    title: {
-       text: 'Fuel Consumption'
-    },
-    xAxis: {
-       type: 'datetime',
-       tickInterval: 1800 * 1000, // 30 minutes
-       gridLineWidth: 1,
-       labels: {
-          align: 'left',
-          x: 3,
-          y: -3
-       }
-    },
-    yAxis: {
-       title: {
-          text: null
-       },
-       labels: {
-          align: 'left',
-          x: 3,
-          y: 16,
-          formatter: function() {
-             return Highcharts.numberFormat(this.value, 0);
-          }
-       },
-       showFirstLabel: false
-    },
-    tooltip: {
-       shared: true,
-       crosshairs: true
-    },
-    plotOptions: {
-       series: {
-          cursor: 'pointer',
-          point: {
-             events: {
-                click: function() {
-                   hs.htmlExpand(null, {
-                      pageOrigin: {
-                         x: this.pageX,
-                         y: this.pageY
-                      },
-                      headingText: this.series.name,
-                      maincontentText: Highcharts.dateFormat(
-                          '%A, %b %e, %Y', this.x) + ':<br/> ' + this.y +
-                          ' visits',
-                      width: 200
-                   });
-                }
-             }
-          },
-          marker: {
-             lineWidth: 1
-          }
-       }
-    }
-}
 
 function loadGPXFileIntoGoogleMap(map, filename) {
     $.ajax({url: filename,
@@ -96,19 +32,131 @@ function drawMap() {
 
 $(document).ready(function() {
     drawMap();
+
+    var fuelColor = "#4572A7";
+    var speedColor = "#AA4643";
+    var options = {
+        chart: {
+           renderTo: 'chart'
+        },
+        legend: {
+            enabled: false
+        },
+        title: {
+           text: "Fuel Consumption and Speed"
+        },
+        xAxis: {
+           type: 'datetime',
+           tickInterval: 1800 * 1000, // 30 minutes
+           gridLineWidth: 1,
+           labels: {
+              align: 'left',
+              x: 3,
+              y: -3
+           }
+        },
+        yAxis: [
+            {
+                title: {
+                    text: "Speed",
+                    style: {
+                        color: speedColor
+                    }
+                },
+                labels: {
+                   align: 'left',
+                   x: 3,
+                   y: 16,
+                   formatter: function() {
+                       return Highcharts.numberFormat(this.value, 0) + " kph";
+                   },
+                   style: {
+                       color: speedColor,
+                   }
+                },
+                showFirstLabel: false
+            },
+            {
+                title: {
+                    text: "Fuel Consumed",
+                    style: {
+                        color: fuelColor
+                    }
+                },
+                labels: {
+                   align: 'left',
+                   x: 3,
+                   y: 16,
+                   formatter: function() {
+                      return this.value + " L";
+                   },
+                   style: {
+                       color: fuelColor,
+                   }
+                },
+                opposite: true,
+                showFirstLabel: false
+            }
+        ],
+        tooltip: {
+           shared: true,
+           crosshairs: true
+        },
+        plotOptions: {
+           series: {
+              cursor: 'pointer',
+              point: {
+                 events: {
+                    click: function() {
+                       hs.htmlExpand(null, {
+                          pageOrigin: {
+                             x: this.pageX,
+                             y: this.pageY
+                          },
+                          headingText: this.series.name,
+                          maincontentText: Highcharts.dateFormat(
+                              '%A, %b %e, %Y', this.x) + ':<br/> ' + this.y +
+                              ' visits',
+                          width: 200
+                       });
+                    }
+                 }
+              },
+              marker: {
+                 lineWidth: 1
+              }
+           }
+        }
+    }
+
     $.get($("#chart").data('url'), function(data) {
-        var series = [];
+        var speedSeries = [];
+        var fuelSeries = [];
         $.each(data.records, function(i, record) {
-            series.push([record.timestamp, record.value]);
+            if(record.name == "fuel_consumed_since_restart") {
+                fuelSeries.push([record.timestamp, record.value]);
+            } else if(record.name == "vehicle_speed") {
+                speedSeries.push([record.timestamp, record.value]);
+            }
         });
 
         options.series = [];
-        options.series.push({name: "Ford Focus",
+        options.series.push({name: "Fuel Consumption",
             lineWidth: 4,
+            color: fuelColor,
+            yAxis: 1,
             market: {
                 radius: 4
             },
-            data: series});
+            data: fuelSeries});
+        options.series.push({name: "Speed",
+            lineWidth: 4,
+            color: speedColor,
+            yAxis: 0,
+            market: {
+                radius: 4
+            },
+            data: speedSeries});
 
         chart = new Highcharts.Chart(options);
     }, 'json');
