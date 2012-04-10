@@ -51,7 +51,7 @@ def add_record():
         for record in records:
             timestamp = record.pop('timestamp')
             trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
-            record = massage_record(record, timestamp)
+            record = massage_record(record, float(timestamp))
             LIVESTREAM_QUEUE.put(record)
     return make_status_response(201)
 
