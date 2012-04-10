@@ -5,6 +5,8 @@ import errno
 from flask import Flask
 
 import views
+from util import generate_filename, massage_record, prime_records_queue
+from util import RECORDS_QUEUE
 
 
 def setup_routes(app):
@@ -33,6 +35,7 @@ def create_app(config=None):
         app.config.update(config)
     setup_routes(app)
     make_trace_folder(app)
+    prime_records_queue(app, RECORDS_QUEUE)
     return app
 
 

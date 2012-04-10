@@ -87,7 +87,7 @@ class GpxTestCase(BaseRecorderTestCase):
         self.client.post('/records', data=json.dumps(data),
                 content_type='application/json')
 
-    def test_retreive_records(self):
+    def test_gpx(self):
         self._insert_records()
         response = self.client.get(url_for('show_gpx'),
                 headers=[('Accept', 'application/gpx+xml')])
