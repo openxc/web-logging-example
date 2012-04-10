@@ -6,11 +6,11 @@ var options = {
         enabled: false
     },
     title: {
-       text: 'Average Fuel Economy'
+       text: 'Fuel Consumption'
     },
     xAxis: {
        type: 'datetime',
-       tickInterval: 24 * 3600 * 1000, // one day
+       tickInterval: 1800 * 1000, // 30 minutes
        gridLineWidth: 1,
        labels: {
           align: 'left',
