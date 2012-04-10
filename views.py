@@ -10,14 +10,23 @@ from util import make_status_response, generate_filename, jsonify
 RECORDS_QUEUE = deque(maxlen=100)
 
 def _prime_records_queue(q):
-    with open(generate_filename(app.config), 'r') as trace_file:
-        for line in trace_file:
-            if len(RECORDS_QUEUE) == RECORDS_QUEUE.maxlen:
-                break
-            timestamp, record = line.split(':', 1)
-            record = json.loads(record)
-            record['timestamp'] = timestamp
-            RECORDS_QUEUE.append(record)
+    filename = generate_filename(app.config)
+    try:
+        with open(filename, 'r') as trace_file:
+            for line in trace_file:
+                if len(RECORDS_QUEUE) == RECORDS_QUEUE.maxlen:
+                    break
+                timestamp, record = line.split(':', 1)
+                record = _massage_record(json.loads(record), float(timestamp))
+                RECORDS_QUEUE.append(record)
+    except IOError:
+        app.logger.warn("No active trace file found at %s" % filename)
+
+
+def _massage_record(record, timestamp):
+    record['timestamp'] = int(timestamp * 1000)
+    return record
+
 
 
 def add_record():
@@ -34,7 +43,7 @@ def add_record():
         for record in records:
             timestamp = record.pop('timestamp')
             trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
-            record['timestamp'] = timestamp
+            record = _massage_record(record, timestamp)
             RECORDS_QUEUE.append(record)
     return make_status_response(201)
 
