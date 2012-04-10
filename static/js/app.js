@@ -128,6 +128,7 @@ $(document).ready(function() {
         }
     }
 
+    var chart;
     $.get($("#chart").data('url'), function(data) {
         var speedSeries = [];
         var fuelSeries = [];
@@ -158,5 +159,22 @@ $(document).ready(function() {
             data: speedSeries});
 
         chart = new Highcharts.Chart(options);
+        setInterval(function() {
+            var x = (new Date()).getTime();
+            var y = Math.random();
+
+            x = (new Date()).getTime();
+            y = Math.random();
+            chart.series[1].addPoint([x, y], true, true);
+        }, 1000);
+
     }, 'json');
+
+    var ws = new WebSocket("ws://" + document.domain + ":5000/records");
+    ws.onmessage = function (theEvent) {
+        var data = $.parseJSON(theEvent.data);
+        if(data.name === "fuel_consumed_since_restart") {
+            chart.series[0].addPoint([data.timestamp, data.value], true, true);
+        }
+    };
 });

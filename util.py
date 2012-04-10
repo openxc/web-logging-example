@@ -3,8 +3,9 @@ import errno
 import os
 from datetime import datetime
 from collections import deque
+from functools import partial
 
-from flask import Response, make_response
+from flask import Response, make_response, request
 
 FILENAME_DATE_FORMAT = '%Y-%m-%d-%H'
 RECORDS_QUEUE = deque(maxlen=1000)
@@ -52,3 +53,12 @@ def make_trace_folder(app):
             pass
         else: raise
 
+
+def request_wants(mimetype):
+    best = request.accept_mimetypes \
+        .best_match([mimetype, 'text/html'])
+    return best == mimetype and \
+        request.accept_mimetypes[best] > \
+        request.accept_mimetypes['text/html']
+
+request_wants_json = partial(request_wants, 'application/json')

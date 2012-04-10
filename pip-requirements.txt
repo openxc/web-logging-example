@@ -1,2 +1,4 @@
 flask==0.8
 unittest2==0.5.1
+gevent==0.13.6
+gevent-websocket==0.3.4

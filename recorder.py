@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from gevent.pywsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
 from flask import Flask
 
 import views
@@ -33,4 +35,5 @@ app = create_app()
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host='0.0.0.0')
+    server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    server.serve_forever()

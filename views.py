@@ -1,11 +1,12 @@
 import json
+import time
 from xml.etree import ElementTree as ET
 
 from flask import request, render_template, Response
 from flask import current_app as app, abort
 
 from util import make_status_response, generate_filename, jsonify
-from util import massage_record, RECORDS_QUEUE
+from util import massage_record, RECORDS_QUEUE, request_wants_json
 
 
 def _generate_gpx(records):
@@ -57,7 +58,14 @@ def add_record():
 
 
 def show_records():
-    return jsonify(records=list(RECORDS_QUEUE))
+    ws = request.environ.get('wsgi.websocket', None)
+    if request_wants_json():
+        return jsonify(records=list(RECORDS_QUEUE))
+    elif ws is not None:
+        while True:
+            ws.send(json.dumps(RECORDS_QUEUE[0]))
+            time.sleep(1)
+    return make_status_response(400)
 
 
 def visualization():
