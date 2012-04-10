@@ -3,6 +3,7 @@ import unittest2 as unittest
 import os.path
 import json
 import shutil
+from xml.etree import ElementTree as ET
 
 from flask import url_for
 
@@ -37,7 +38,11 @@ class RecordTestCase(BaseRecorderTestCase):
             {'timestamp': 1332975699.078000, 'name': 'fuel_consumption',
                     'value': 0.02},
             {'timestamp': 1332975700.078000, 'name': 'fuel_consumption',
-                    'value': 0.023}
+                    'value': 0.023},
+            {'timestamp': 1332975697.078000, 'name': 'latitude',
+                    'value': 42.0},
+            {'timestamp': 1332975698.078000, 'name': 'longitude',
+                    'value': -90.0}
         ]}
         self.client.post('/records', data=json.dumps(data),
                 content_type='application/json')
@@ -49,7 +54,8 @@ class RecordTestCase(BaseRecorderTestCase):
         assert os.path.exists(filename)
         for line in open(filename):
             record = json.loads(line.split(':', 1)[1])
-            assert record['name'] in ('vehicle_speed', 'fuel_consumption')
+            assert record['name'] in ('vehicle_speed', 'fuel_consumption',
+                    'longitude', 'latitude')
 
     def test_retreive_records(self):
         self._insert_records()
@@ -58,10 +64,47 @@ class RecordTestCase(BaseRecorderTestCase):
         assert 'records' in response.data
         data = json.loads(response.data)
         record = data['records'][0]
-        assert record['name'] == 'vehicle_speed'
+        assert record['name'] in ('vehicle_speed', 'fuel_consumption',
+                'longitude', 'latitude')
+
+
+class GpxTestCase(BaseRecorderTestCase):
+    def _insert_records(self):
+        data = {'records': [
+            {'timestamp': 1332975697.078000, 'name': 'latitude',
+                    'value': 42.0},
+            {'timestamp': 1332975698.078000, 'name': 'longitude',
+                    'value': -90.0},
+            {'timestamp': 1332975698.078000, 'name': 'latitude',
+                    'value': 42.1},
+            {'timestamp': 1332975699.078000, 'name': 'longitude',
+                    'value':-91.0},
+            {'timestamp': 1332975699.078000, 'name': 'latitude',
+                    'value': 42.2},
+            {'timestamp': 1332975700.078000, 'name': 'longitude',
+                    'value': -92.0}
+        ]}
+        self.client.post('/records', data=json.dumps(data),
+                content_type='application/json')
+
+    def test_retreive_records(self):
+        self._insert_records()
+        response = self.client.get(url_for('show_gpx'),
+                headers=[('Accept', 'application/gpx+xml')])
+        assert response.data is not None
+        root = ET.fromstring(response.data)
+        assert root is not None
+        track = root.find("trk")
+        assert track is not None
+        segment = track.find("trkseg")
+        assert segment is not None
+        point = segment.find("trkpt")
+        assert float(point.attrib['lat']) == 42.0
+        assert float(point.attrib['lon']) == -90.0
+
 
 class VisualizationTestCase(BaseRecorderTestCase):
-        
+
     def test_no_data(self):
         response = self.client.get(url_for('visualization'))
         assert 'class="vehicle"' in response.data

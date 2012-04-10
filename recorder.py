@@ -15,6 +15,8 @@ def setup_routes(app):
             methods=['POST'])
     app.add_url_rule('/records', 'show_records', views.show_records,
             methods=['GET'])
+    app.add_url_rule('/gpx', 'show_gpx', views.show_gpx,
+            methods=['GET'])
 
 def make_trace_folder(app):
     try:

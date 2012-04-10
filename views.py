@@ -1,7 +1,8 @@
 import json
 from collections import deque
+from xml.etree import ElementTree as ET
 
-from flask import request, render_template
+from flask import request, render_template, Response
 from flask import current_app as app, abort
 
 from util import make_status_response, generate_filename, jsonify
@@ -27,7 +28,33 @@ def _massage_record(record, timestamp):
     record['timestamp'] = int(timestamp * 1000)
     return record
 
+def _generate_gpx(records):
+    root = ET.Element("gpx")
 
+    track = ET.SubElement(root, "trk")
+    number = ET.SubElement(track, "number")
+    number.text = "1"
+
+    segment = ET.SubElement(track, "trkseg")
+
+    latitude = longitude = None
+    for record in records:
+        value = record['value']
+        if record['name'] == "latitude":
+            latitude = value
+        elif record['name'] == "longitude":
+            longitude = value
+        if latitude is not None and longitude is not None:
+            point = ET.SubElement(segment, "trkpt")
+            point.set('lat', str(latitude))
+            point.set('lon', str(longitude))
+            latitude = longitude = None
+    return ET.ElementTree(root)
+
+def show_gpx():
+    return Response("<?xml version=\"1.0\" ?>" +
+            ET.tostring(_generate_gpx(RECORDS_QUEUE).getroot()),
+            mimetype='application/xml')
 
 def add_record():
     if not request.json:
