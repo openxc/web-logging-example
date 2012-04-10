@@ -33,8 +33,8 @@ function drawMap() {
 $(document).ready(function() {
     drawMap();
 
-    var fuelColor = "#4572A7";
-    var speedColor = "#AA4643";
+    var fuelColor = "#FF7C00";
+    var speedColor = "#37B6CE";
     var options = {
         chart: {
            renderTo: 'chart'
