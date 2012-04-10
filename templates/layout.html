@@ -8,8 +8,10 @@
 
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
 
-    <link rel="stylesheet" type="text/css" href="/css/vendor/normalize.css">
-    <link rel="stylesheet" type="text/css" href="/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="{{ url_for('static', filename='css/vendor/normalize.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ url_for('static', filename='css/vendor/bootstrap.min.css') }}">
 
     <link rel="stylesheet" type="text/css" media="screen"
             href="{{ url_for('static', filename='css/styles.css') }}"/>
@@ -19,14 +21,14 @@
     <![endif]-->
 </head>
 
-<body id="about">
-    <div class="topbar">
-        <div class="topbar-inner">
+<body>
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
             <div class="container-fluid">
                 {% block header %}
-                <h1 id="logo"><a href="{{ url_for('visualization') }}">
+                <h3 id="logo"><a class="brand" href="{{ url_for('visualization') }}">
                         OpenXC Livestream
-                </a></h1>
+                </a></h3>
                 {% endblock header %}
             </div>
         </div>
@@ -40,16 +42,16 @@
         {% block body %}{% endblock %}
         </section>
 
-    <footer>
-        {% block footer %}
-        {% endblock footer %}
-        <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
-            <img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/80x15.png" />
-        </a>
-        <p>
-            Except as otherwise noted, the content of this page is licensed
-            under the Creative Commons Attribution 3.0 License.
-        </p>
+        <footer>
+            {% block footer %}
+            {% endblock footer %}
+            <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
+                <img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/80x15.png" />
+            </a>
+            <p>
+                Except as otherwise noted, the content of this page is licensed
+                under the Creative Commons Attribution 3.0 License.
+            </p>
         </footer>
     </div>
 
@@ -60,6 +62,5 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/highcharts/highcharts.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/highcharts/themes/gray.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/highcharts/modules/exporting.js') }}"></script>
-    <script type="text/javascript" src="/js/app.js"></script>
 </body>
 </html>
