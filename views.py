@@ -16,6 +16,7 @@ def _prime_records_queue(q):
                 break
             timestamp, record = line.split(':', 1)
             record = json.loads(record)
+            record['timestamp'] = timestamp
             RECORDS_QUEUE.append(record)
 
 
