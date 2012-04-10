@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-import os
-import errno
-
 from flask import Flask
 
 import views
 from util import generate_filename, massage_record, prime_records_queue
-from util import RECORDS_QUEUE
+from util import RECORDS_QUEUE, make_trace_folder
 
 
 def setup_routes(app):
@@ -20,13 +17,6 @@ def setup_routes(app):
     app.add_url_rule('/gpx', 'show_gpx', views.show_gpx,
             methods=['GET'])
 
-def make_trace_folder(app):
-    try:
-        os.mkdir(app.config['TRACE_FOLDER'])
-    except OSError as exc:
-        if exc.errno == errno.EEXIST:
-            pass
-        else: raise
 
 def create_app(config=None):
     app = Flask(__name__)

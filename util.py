@@ -1,4 +1,6 @@
 import json
+import errno
+import os
 from datetime import datetime
 from collections import deque
 
@@ -40,3 +42,13 @@ def prime_records_queue(app, q):
                 RECORDS_QUEUE.append(record)
     except IOError:
         app.logger.warn("No active trace file found at %s" % filename)
+
+
+def make_trace_folder(app):
+    try:
+        os.mkdir(app.config['TRACE_FOLDER'])
+    except OSError as exc:
+        if exc.errno == errno.EEXIST:
+            pass
+        else: raise
+
