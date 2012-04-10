@@ -47,7 +47,6 @@ $(document).ready(function() {
         },
         xAxis: {
            type: 'datetime',
-           tickInterval: 1800 * 1000, // 30 minutes
            gridLineWidth: 1,
            labels: {
               align: 'left',
