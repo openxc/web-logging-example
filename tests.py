@@ -2,11 +2,12 @@
 import unittest2 as unittest
 import os.path
 import json
+import shutil
 
 from flask import url_for
 
 from util import generate_filename
-from recorder import create_app
+from recorder import create_app, make_trace_folder
 
 
 class BaseRecorderTestCase(unittest.TestCase):
@@ -14,8 +15,12 @@ class BaseRecorderTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.app.config.from_pyfile("test_settings.py")
+        make_trace_folder(self.app)
         self.client = self.app.test_client()
         self.app.test_request_context().push()
+
+    def tearDown(self):
+        shutil.rmtree(self.app.config['TRACE_FOLDER'])
 
 
 class RecordTestCase(BaseRecorderTestCase):

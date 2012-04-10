@@ -16,13 +16,7 @@ def setup_routes(app):
     app.add_url_rule('/records', 'show_records', views.show_records,
             methods=['GET'])
 
-def create_app(config=None):
-    app = Flask(__name__)
-    app.config.from_pyfile("settings.py")
-    if config:
-        app.config.update(config)
-    setup_routes(app)
-
+def make_trace_folder(app):
     try:
         os.mkdir(app.config['TRACE_FOLDER'])
     except OSError as exc:
@@ -30,7 +24,15 @@ def create_app(config=None):
             pass
         else: raise
 
+def create_app(config=None):
+    app = Flask(__name__)
+    app.config.from_pyfile("settings.py")
+    if config:
+        app.config.update(config)
+    setup_routes(app)
+    make_trace_folder(app)
     return app
+
 
 app = create_app()
 
