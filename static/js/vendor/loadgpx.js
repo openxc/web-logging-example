@@ -221,8 +221,8 @@ GPXParser.prototype.centerAndZoom = function(trackSegment) {
     var centerlat = (maxlat + minlat) / 2;
 
     var bounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(minlat, minlon),
-            new google.maps.LatLng(maxlat, maxlon));
+            new google.maps.LatLng(minlat - .001, minlon - .001),
+            new google.maps.LatLng(maxlat + .001, maxlon + .001));
     this.map.setCenter(new google.maps.LatLng(centerlat, centerlon));
     this.map.fitBounds(bounds);
 }

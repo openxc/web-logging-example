@@ -1,6 +1,5 @@
 $(document).ready(function() {
     var mapOptions = {
-      zoom: 8,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     if($("#map").length) {
