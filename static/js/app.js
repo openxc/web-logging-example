@@ -14,6 +14,10 @@ function drawMap() {
     }
 }
 
+function shouldShift(series) {
+    return series.data.length >= 50;
+}
+
 $(document).ready(function() {
     drawMap();
 
@@ -90,22 +94,6 @@ $(document).ready(function() {
               marker: {
                  lineWidth: 1
               }
-           },
-           spline: {
-                dataLabels: {
-                enabled: true,
-                formatter: function() {
-                    // return this.series.name;
-                    if (!this.series.inc) this.series.inc = 1;
-
-                    if (this.series.inc >= parseInt(this.series.data.length)) {
-                        this.series.inc = 0;
-                        return this.point.y;
-                    }
-                    this.series.inc++;
-                }
-            }
-
            }
         }
     }
@@ -146,7 +134,15 @@ $(document).ready(function() {
         ws.onmessage = function (theEvent) {
             var data = $.parseJSON(theEvent.data);
             if(data.name === "fuel_consumed_since_restart") {
-                chart.series[0].addPoint([data.timestamp, data.value], true, false);
+                chart.series[0].addPoint([data.timestamp, data.value], true,
+                        shouldShift(chart.series[0]));
+            } else if(data.name === "vehicle_speed") {
+                chart.series[1].addPoint([data.timestamp, data.value], true,
+                        shouldShift(chart.series[1]));
+            } else if(data.name === "latitude") {
+                arguments.callee.latitude = data.value;
+            } else if(data.name === "longitude") {
+                arguments.callee.longitude = data.value;
             }
         };
 
