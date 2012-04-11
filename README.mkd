@@ -37,11 +37,11 @@ development server, resetting the database, etc.).
 
 Without Fabric:
 
-    $ python recorder.py
+    $ python app.py
 
 Using Fabric:
 
-    $ fab run
+    $ fab runserver
 
 ## API
 
