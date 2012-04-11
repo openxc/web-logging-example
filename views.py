@@ -1,9 +1,7 @@
 import json
-import time
-from xml.etree import ElementTree as ET
 from Queue import Queue
 
-from flask import request, render_template, Response
+from flask import request, render_template
 from flask import current_app as app, abort
 
 from util import make_status_response, generate_filename, jsonify
