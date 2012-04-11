@@ -36,7 +36,11 @@ $(document).ready(function() {
     var speedColor = "#37B6CE";
     var options = {
         chart: {
-            renderTo: 'chart'
+            renderTo: 'chart',
+            animation: {
+                enabled: true,
+                easing: "linear"
+            }
         },
         legend: {
             enabled: false
