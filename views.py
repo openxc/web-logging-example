@@ -38,7 +38,10 @@ def show_records():
         return jsonify(records=[])
     elif ws is not None:
         while True:
-            ws.send(json.dumps(LIVESTREAM_QUEUE.get()))
+            records = [LIVESTREAM_QUEUE.get()]
+            current_size = LIVESTREAM_QUEUE.qsize()
+            records += [LIVESTREAM_QUEUE.get(1) for _ in range(current_size)]
+            ws.send(json.dumps({"records": records}))
     return make_status_response(400)
 
 
