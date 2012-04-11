@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-from gevent.pywsgi import WSGIServer
 from flask import Flask
 
 import views
-from handler import PatchedWebSocketHandler
 from util import generate_filename, massage_record, make_trace_folder
 
 
@@ -31,5 +29,4 @@ app = create_app()
 
 if __name__ == '__main__':
     app = create_app()
-    server = WSGIServer(('', 5000), app, handler_class=PatchedWebSocketHandler)
-    server.serve_forever()
+    app.run("0.0.0.0")
