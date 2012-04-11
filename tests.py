@@ -62,16 +62,6 @@ class RecordTestCase(BaseRecorderTestCase):
                     'fuel_consumed_since_restart',
                     'longitude', 'latitude')
 
-    def test_retreive_records(self):
-        self._insert_records()
-        response = self.client.get(url_for('show_records'),
-                headers=[('Accept', 'application/json')])
-        assert 'records' in response.data
-        data = json.loads(response.data)
-        record = data['records'][0]
-        assert record['name'] in ('vehicle_speed',
-                'fuel_consumed_since_restart', 'longitude', 'latitude')
-
 
 class VisualizationTestCase(BaseRecorderTestCase):
 
