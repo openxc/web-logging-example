@@ -73,41 +73,6 @@ class RecordTestCase(BaseRecorderTestCase):
                 'fuel_consumed_since_restart', 'longitude', 'latitude')
 
 
-class GpxTestCase(BaseRecorderTestCase):
-    def _insert_records(self):
-        data = {'records': [
-            {'timestamp': 1332975697.078000, 'name': 'latitude',
-                    'value': 42.0},
-            {'timestamp': 1332975698.078000, 'name': 'longitude',
-                    'value': -90.0},
-            {'timestamp': 1332975698.078000, 'name': 'latitude',
-                    'value': 42.1},
-            {'timestamp': 1332975699.078000, 'name': 'longitude',
-                    'value':-91.0},
-            {'timestamp': 1332975699.078000, 'name': 'latitude',
-                    'value': 42.2},
-            {'timestamp': 1332975700.078000, 'name': 'longitude',
-                    'value': -92.0}
-        ]}
-        self.client.post('/records', data=json.dumps(data),
-                content_type='application/json')
-
-    def test_gpx(self):
-        self._insert_records()
-        response = self.client.get(url_for('show_gpx'),
-                headers=[('Accept', 'application/gpx+xml')])
-        assert response.data is not None
-        root = ET.fromstring(response.data)
-        assert root is not None
-        track = root.find("trk")
-        assert track is not None
-        segment = track.find("trkseg")
-        assert segment is not None
-        point = segment.find("trkpt")
-        assert float(point.attrib['lat']) == 42.0
-        assert float(point.attrib['lon']) == -90.0
-
-
 class VisualizationTestCase(BaseRecorderTestCase):
 
     def test_no_data(self):

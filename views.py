@@ -13,30 +13,6 @@ from util import massage_record, request_wants_json
 LIVESTREAM_QUEUE = Queue(maxsize=1000)
 
 
-def _generate_gpx(records):
-    root = ET.Element("gpx")
-
-    track = ET.SubElement(root, "trk")
-    number = ET.SubElement(track, "number")
-    number.text = "1"
-
-    segment = ET.SubElement(track, "trkseg")
-
-    latitude = longitude = None
-    for record in records:
-        value = record['value']
-        if record['name'] == "latitude":
-            latitude = value
-        elif record['name'] == "longitude":
-            longitude = value
-        if latitude is not None and longitude is not None:
-            point = ET.SubElement(segment, "trkpt")
-            point.set('lat', str(latitude))
-            point.set('lon', str(longitude))
-            latitude = longitude = None
-    return ET.ElementTree(root)
-
-
 def add_record():
     if not request.json:
         app.logger.error("Expected JSON, but POSTed data was %s", request.data)
