@@ -10,7 +10,7 @@ from util import make_status_response, generate_filename, jsonify
 from util import massage_record, request_wants_json
 
 
-LIVESTREAM_QUEUE = Queue(maxsize=1000)
+LIVESTREAM_QUEUE = Queue()
 
 
 def add_record():
