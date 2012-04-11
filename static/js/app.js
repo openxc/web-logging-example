@@ -1,16 +1,27 @@
-function drawMap() {
+function mapper() {
+    var center = new google.maps.LatLng(42.292286,-83.240951);
     var mapOptions = {
-      zoom: 8,
+      zoom: 4,
+      center: center,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
+
     if($("#map").length) {
-        var map = new google.maps.Map(document.getElementById("map"),
+        mapper.mapObject = new google.maps.Map(document.getElementById("map"),
                 mapOptions);
 
-        var gpxFiles = $("a.gpx").get();
-        $.each(gpxFiles, function(i, file) {
-            loadGPXFileIntoGoogleMap(map, $(file).attr("href"));
+        mapper.marker = new google.maps.Marker({
+                position: center,
+                map: mapper.mapObject
         });
+
+        mapper.track = new google.maps.Polyline({
+            path: [center],
+            strokeColor: "#ff0000",
+            strokeWidth: 5,
+            map: mapper.mapObject
+        });
+        mapper.path = mapper.track.getPath();
     }
 }
 
@@ -19,7 +30,7 @@ function shouldShift(series) {
 }
 
 $(document).ready(function() {
-    drawMap();
+    mapper();
 
     var fuelColor = "#FF7C00";
     var speedColor = "#37B6CE";
@@ -144,6 +155,16 @@ $(document).ready(function() {
             } else if(data.name === "longitude") {
                 arguments.callee.longitude = data.value;
             }
+
+            if(arguments.callee.latitude != undefined
+                    && arguments.callee.longitude != undefined) {
+                var coordinates = new google.maps.LatLng(
+                        arguments.callee.latitude,
+                        arguments.callee.longitude);
+                mapper.path.push(coordinates);
+                mapper.marker.setPosition(coordinates);
+            }
+
         };
 
     }, 'json');
