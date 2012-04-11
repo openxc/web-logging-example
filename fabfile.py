@@ -36,13 +36,12 @@ def setup():
 
 def runserver():
     """Run the development web server."""
-    local("gunicorn -b 0.0.0.0:5000 --workers=2 "
-            "--worker-class=\"workers.GeventWebSocketWorker\" recorder:app")
+    local("python recorder.py")
 
 def test():
     """Run the test suite."""
     clean()
-    local("python tests.py")
+    local('tests/run_tests.py')
 
 def clean():
     """Clean up all .pyc files."""

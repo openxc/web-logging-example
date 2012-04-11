@@ -6,6 +6,7 @@ from functools import partial
 
 from flask import Response, make_response, request
 
+
 FILENAME_DATE_FORMAT = '%Y-%m-%d-%H'
 
 def jsonify(**kwargs):
@@ -18,9 +19,9 @@ def make_status_response(status):
     return response
 
 
-def generate_filename(config, d=None):
+def generate_filename(settings, d=None):
     d = d or datetime.now()
-    return "%s/%s.json" % (config['TRACE_FOLDER'],
+    return "%s/%s.json" % (settings['trace_folder'],
             d.strftime(FILENAME_DATE_FORMAT))
 
 
@@ -29,23 +30,9 @@ def massage_record(record, timestamp):
     return record
 
 
-def prime_records_queue(app, q):
-    filename = generate_filename(app.config)
+def make_trace_folder(settings):
     try:
-        with open(filename, 'r') as trace_file:
-            for line in trace_file:
-                if len(RECORDS_QUEUE) == RECORDS_QUEUE.maxlen:
-                    break
-                timestamp, record = line.split(':', 1)
-                record = massage_record(json.loads(record), float(timestamp))
-                RECORDS_QUEUE.append(record)
-    except IOError:
-        app.logger.warn("No active trace file found at %s" % filename)
-
-
-def make_trace_folder(app):
-    try:
-        os.mkdir(app.config['TRACE_FOLDER'])
+        os.mkdir(settings['trace_folder'])
     except OSError as exc:
         if exc.errno == errno.EEXIST:
             pass

@@ -1,5 +1,6 @@
 import json
 import tornado.web
+import tornado.websocket
 
 import logging
 logger = logging.getLogger('boilerplate.' + __name__)
@@ -43,3 +44,7 @@ class BaseHandler(tornado.web.RequestHandler):
         arg = self.request.arguments[name]
         logger.debug("Found '%s': %s in JSON arguments" % (name, arg))
         return arg
+
+
+class BaseWebSocketHandler(tornado.websocket.WebSocketHandler, BaseHandler):
+    pass

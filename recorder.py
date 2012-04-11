@@ -17,7 +17,7 @@ class DataRecorder(tornado.web.Application):
 
 def main():
     app = DataRecorder()
-    make_trace_folder(app)
+    make_trace_folder(settings)
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()

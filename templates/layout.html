@@ -4,17 +4,17 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-    <title>{% block title %}{% endblock %}OpenXC Livestream</title>
+    <title>{% block title %}{% end %}OpenXC Livestream</title>
 
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
 
     <link rel="stylesheet" type="text/css"
-        href="{{ url_for('static', filename='css/vendor/normalize.css') }}">
+        href="{{ static_url('css/vendor/normalize.css') }}">
     <link rel="stylesheet" type="text/css"
-        href="{{ url_for('static', filename='css/vendor/bootstrap.min.css') }}">
+        href="{{ static_url('css/vendor/bootstrap.min.css') }}">
 
     <link rel="stylesheet" type="text/css" media="screen"
-            href="{{ url_for('static', filename='css/styles.css') }}"/>
+            href="{{ static_url('css/styles.css') }}"/>
 
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -26,25 +26,22 @@
         <div class="navbar-inner">
             <div class="container-fluid">
                 {% block header %}
-                <h3 id="logo"><a class="brand" href="{{ url_for('visualization') }}">
+                <h3 id="logo"><a class="brand" href="/visualization">
                         OpenXC Livestream
                 </a></h3>
-                {% endblock header %}
+                {% end header %}
             </div>
         </div>
     </div>
 
     <div class="container-fluid">
-        {% for message in get_flashed_messages() %}
-        <div class="alert">{{ message }}</div>
-        {% endfor %}
         <section id="content" class="content">
-        {% block body %}{% endblock %}
+        {% block body %}{% end %}
         </section>
 
         <footer>
             {% block footer %}
-            {% endblock footer %}
+            {% end footer %}
             <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
                 <img alt="Creative Commons License" src="http://i.creativecommons.org/l/by/3.0/80x15.png" />
             </a>
@@ -59,9 +56,9 @@
         src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
     </script>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/highcharts/highcharts.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/highcharts/themes/gray.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/vendor/highcharts/modules/exporting.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/vendor/highcharts/highcharts.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/vendor/highcharts/themes/gray.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/vendor/highcharts/modules/exporting.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/app.js') }}"></script>
 </body>
 </html>

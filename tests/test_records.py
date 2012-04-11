@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-import unittest2 as unittest
+from tornado.httpclient import HTTPRequest
+import json
 import os.path
 import json
 import shutil
@@ -8,21 +8,9 @@ from xml.etree import ElementTree as ET
 from flask import url_for
 
 from util import generate_filename
-from recorder import create_app, make_trace_folder
+from settings import settings
 
-
-class BaseRecorderTestCase(unittest.TestCase):
-
-    def setUp(self):
-        self.app = create_app()
-        self.app.config.from_pyfile("test_settings.py")
-        make_trace_folder(self.app)
-        self.client = self.app.test_client()
-        self.app.test_request_context().push()
-
-    def tearDown(self):
-        print "erasing %s " % self.app.config['TRACE_FOLDER']
-        shutil.rmtree(self.app.config['TRACE_FOLDER'])
+from tests.base import BaseRecorderTestCase
 
 
 class RecordTestCase(BaseRecorderTestCase):
@@ -48,11 +36,15 @@ class RecordTestCase(BaseRecorderTestCase):
             {'timestamp': 1332975698.078000, 'name': 'longitude',
                     'value': -90.0}
         ]}
-        self.client.post('/records', data=json.dumps(data),
-                content_type='application/json')
+        self.http_client.fetch(HTTPRequest(self.get_url('/records'),
+                'POST',
+                headers=dict(content_type='application/json'),
+                body=json.dumps(data)),
+                self.stop)
+        self.wait()
 
     def test_create_records(self):
-        filename = generate_filename(self.app.config)
+        filename = generate_filename(settings)
         assert not os.path.exists(filename)
         self._insert_records()
         assert os.path.exists(filename)
@@ -62,13 +54,3 @@ class RecordTestCase(BaseRecorderTestCase):
                     'fuel_consumed_since_restart',
                     'longitude', 'latitude')
 
-
-class VisualizationTestCase(BaseRecorderTestCase):
-
-    def test_no_data(self):
-        response = self.client.get(url_for('visualization'))
-        assert 'class="vehicle"' in response.data
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,46 +1,46 @@
+import Queue
 import json
-from Queue import Queue
+import collections
 
-from flask import request, render_template
-from flask import current_app as app, abort
-
-from util import make_status_response, generate_filename, jsonify
-from util import massage_record, request_wants_json
-from handlers.base import BaseHandler
+from util import make_status_response, generate_filename
+from util import massage_record
+from settings import settings
+from handlers.base import BaseWebSocketHandler
 
 import logging
-logger = logging.getLogger('recorder.' + __name__)
+log = logging.getLogger('recorder.' + __name__)
 
 
-LIVESTREAM_QUEUE = Queue()
+LISTENERS = collections.deque()
+RECORD_QUEUE = Queue.Queue()
 
-class Recordshandler(BaseHandler):
-    def get(self):
-        ws = request.environ.get('wsgi.websocket', None)
-        if request_wants_json():
-            return jsonify(records=[])
-        elif ws is not None:
-            while True:
-                records = [LIVESTREAM_QUEUE.get()]
-                current_size = LIVESTREAM_QUEUE.qsize()
-                records += [LIVESTREAM_QUEUE.get(1) for _ in range(current_size)]
-                ws.send(json.dumps({"records": records}))
-        return make_status_response(400)
+
+def queue_listener():
+    while True:
+        records = [RECORD_QUEUE.get()]
+        current_size = RECORD_QUEUE.qsize()
+        records += [RECORD_QUEUE.get(1) for _ in range(current_size)]
+        data = json.dumps({"records": records})
+        for client in LISTENERS:
+            log.debug("Sending %s to %s", records, client)
+            client.write_message(unicode(data))
+
+
+class RecordsHandler(BaseWebSocketHandler):
+    def open(self):
+        log.debug("Websocket opened on %s", self.request.remote_ip)
+        LISTENERS.append(self)
+
+    def on_close(self):
+        log.debug("Websocket closed on %s", self.request.remote_ip)
+        LISTENERS.remove(self)
 
     def post(self):
-        if not request.json:
-            app.logger.error("Expected JSON, but POSTed data was %s", request.data)
-            return abort(400)
-
-        records = request.json.get('records', None)
-        if records is None or not hasattr(records, '__iter__'):
-            app.logger.error("Expected JSON, but POSTed data was %s", request.data)
-            return abort(400)
-
-        with open(generate_filename(app.config), 'a') as trace_file:
+        records = self.get_json_argument('records', None)
+        with open(generate_filename(settings), 'a') as trace_file:
             for record in records:
                 timestamp = record.pop('timestamp')
                 trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
                 record = massage_record(record, float(timestamp))
-                LIVESTREAM_QUEUE.put(record)
+                RECORD_QUEUE.put(record)
         return make_status_response(201)
