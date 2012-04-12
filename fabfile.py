@@ -65,6 +65,39 @@ def run(command, forward_agent=True, use_sudo=False, **kwargs):
     else:
         return fabric_run(command, **kwargs)
 
+def send_test_data(filename):
+    import requests
+    import time
+    import json
+    import sys
+    from util import massage_record
+
+    def send_records(records):
+        data = {"records": records}
+        print "Sending %s" % data
+        headers = {'content-type': 'application/json'}
+        r = requests.post('http://localhost:5000/records',
+                data=json.dumps(data), headers=headers)
+        print r
+        time.sleep(1)
+
+    while True:
+        try:
+            records = []
+            with open(filename, 'r') as trace_file:
+                for line in trace_file:
+                    timestamp, record = line.split(':', 1)
+                    record = massage_record(json.loads(record),
+                            float(timestamp))
+                    records.append(record)
+
+                    if len(records) == 25:
+                        send_records(records)
+                        records = []
+        except IOError:
+            print("No active trace file found at %s" % filename)
+
+
 def sshagent_run(command, use_sudo=False):
     """
     Helper function.
