@@ -4,14 +4,6 @@ Data Recorder Receiver
 This is a small web application that receives trace messages from an OpenXC data
 recorder and writes them out to disk, split by hour.
 
-## Requirements
-
-* Python >= 2.6
-
-### Python requirements
-
-* flask >= 0.7.2
-
 ## Installation
 
 First, I recommend installing `pip`, the Python package manager (if you don't
@@ -37,7 +29,7 @@ development server, resetting the database, etc.).
 
 Without Fabric:
 
-    $ python app.py
+    $ python recorder.py
 
 Using Fabric:
 
@@ -48,9 +40,6 @@ Using Fabric:
 All API calls accept JSON. There is no authentication.
 
 ### Create a Vehicle
-
-Register a new vehicle with a unique identifier - probably a hash of a MAC
-address or VIN.
 
     POST /records
 
