@@ -66,10 +66,12 @@ def run(command, forward_agent=True, use_sudo=False, **kwargs):
         return fabric_run(command, **kwargs)
 
 def send_test_data(filename):
+    """
+    Send the records from a trace value to a local visualization server
+    """
     import requests
     import time
     import json
-    import sys
 
     def send_records(records):
         data = {"records": records}
@@ -78,16 +80,29 @@ def send_test_data(filename):
         r = requests.post('http://localhost:5000/records',
                 data=json.dumps(data), headers=headers)
         print r
-        time.sleep(1)
+
+    def wait_for_next_record(starting_time, first_timestamp,timestamp):
+        target_time = starting_time + (timestamp - first_timestamp)
+        sleep_duration = target_time - time.time()
+        if sleep_duration > 0:
+            time.sleep(sleep_duration)
 
     while True:
+        starting_time = time.time()
+        first_timestamp = None
         try:
             records = []
             with open(filename, 'r') as trace_file:
                 for line in trace_file:
                     timestamp, record = line.split(':', 1)
+                    timestamp = float(timestamp)
                     record = json.loads(record)
-                    record['timestamp'] = float(timestamp)
+                    record['timestamp'] = timestamp
+
+                    if first_timestamp is None:
+                        first_timestamp = timestamp
+                    wait_for_next_record(starting_time, first_timestamp,
+                            timestamp)
                     records.append(record)
 
                     if len(records) == 25:
