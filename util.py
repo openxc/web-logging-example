@@ -1,22 +1,10 @@
-import json
 import errno
 import os
 from datetime import datetime
 from functools import partial
 
-from flask import Response, make_response, request
-
 
 FILENAME_DATE_FORMAT = '%Y-%m-%d-%H'
-
-def jsonify(**kwargs):
-    return Response(json.dumps(kwargs), mimetype='application/json')
-
-
-def make_status_response(status):
-    response = make_response()
-    response.status_code = status
-    return response
 
 
 def generate_filename(settings, d=None):
@@ -37,13 +25,3 @@ def make_trace_folder(settings):
         if exc.errno == errno.EEXIST:
             pass
         else: raise
-
-
-def request_wants(mimetype):
-    best = request.accept_mimetypes \
-        .best_match([mimetype, 'text/html'])
-    return best == mimetype and \
-        request.accept_mimetypes[best] > \
-        request.accept_mimetypes['text/html']
-
-request_wants_json = partial(request_wants, 'application/json')

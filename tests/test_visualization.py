@@ -5,8 +5,6 @@ import json
 import shutil
 from xml.etree import ElementTree as ET
 
-from flask import url_for
-
 from util import generate_filename
 from util import make_trace_folder
 

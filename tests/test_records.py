@@ -1,11 +1,6 @@
 from tornado.httpclient import HTTPRequest
 import json
 import os.path
-import json
-import shutil
-from xml.etree import ElementTree as ET
-
-from flask import url_for
 
 from util import generate_filename
 from settings import settings
