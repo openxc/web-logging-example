@@ -1,13 +1,3 @@
-from tornado.httpclient import HTTPRequest
-import json
-import os.path
-import json
-import shutil
-from xml.etree import ElementTree as ET
-
-from util import generate_filename
-from util import make_trace_folder
-
 from tests.base import BaseRecorderTestCase
 
 
