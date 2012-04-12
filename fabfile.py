@@ -41,7 +41,7 @@ def runserver():
 def test():
     """Run the test suite."""
     clean()
-    local('tests/run_tests.py')
+    local('python -m tornado.autoreload tests/run_tests.py')
 
 def clean():
     """Clean up all .pyc files."""
