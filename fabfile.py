@@ -70,7 +70,6 @@ def send_test_data(filename):
     import time
     import json
     import sys
-    from util import massage_record
 
     def send_records(records):
         data = {"records": records}
@@ -87,8 +86,8 @@ def send_test_data(filename):
             with open(filename, 'r') as trace_file:
                 for line in trace_file:
                     timestamp, record = line.split(':', 1)
-                    record = massage_record(json.loads(record),
-                            float(timestamp))
+                    record = json.loads(record)
+                    record['timestamp'] = float(timestamp)
                     records.append(record)
 
                     if len(records) == 25:
