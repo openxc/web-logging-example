@@ -1,27 +1,33 @@
-function mapper() {
-    var center = new google.maps.LatLng(42.292286,-83.240951);
+function TraceMap(map) {
+    this.marker = new google.maps.Marker({
+        position: map.getCenter(),
+        map: map
+    });
+
+    this.track = new google.maps.Polyline({
+        path: [],
+        strokeColor: "#ff0000",
+        strokeWidth: 5,
+        map: map
+    });
+    this.path = this.track.getPath();
+}
+
+TraceMap.prototype.addPoint = function(point) {
+    this.path.push(point);
+}
+
+function createMap() {
     var mapOptions = {
         zoom: 4,
-        center: center,
+        center: new google.maps.LatLng(42.292286,-83.240951),
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
     if($("#map").length) {
-        mapper.mapObject = new google.maps.Map(document.getElementById("map"),
+        var map = new google.maps.Map(document.getElementById("map"),
                 mapOptions);
-
-        mapper.marker = new google.maps.Marker({
-            position: center,
-            map: mapper.mapObject
-        });
-
-        mapper.track = new google.maps.Polyline({
-            path: [center],
-            strokeColor: "#ff0000",
-            strokeWidth: 5,
-            map: mapper.mapObject
-        });
-        mapper.path = mapper.track.getPath();
+        return new TraceMap(map);
     }
 }
 
@@ -29,7 +35,7 @@ function shouldShift(series) {
     return series.data.length >= 100;
 }
 
-function openWebsocket(chart) {
+function openWebsocket(chart, map) {
     var ws = new WebSocket("ws://" + document.domain + ":5000/records.ws");
     ws.onmessage = function (theEvent) {
         var data = $.parseJSON(theEvent.data);
@@ -61,8 +67,8 @@ function openWebsocket(chart) {
                 var coordinates = new google.maps.LatLng(
                     arguments.callee.latitude,
                     arguments.callee.longitude);
-                mapper.path.push(coordinates);
-                mapper.marker.setPosition(coordinates);
+                map.addPoint(coordinates);
+                map.marker.setPosition(coordinates);
                 arguments.callee.latitude = arguments.callee.longitude = undefined;
             }
         });
@@ -71,8 +77,6 @@ function openWebsocket(chart) {
 }
 
 $(document).ready(function() {
-    mapper();
-
     var fuelColor = "#FF7C00";
     var speedColor = "#37B6CE";
     var options = {
@@ -174,6 +178,7 @@ $(document).ready(function() {
             radius: 4
         },
         data: []});
+
     var chart = new Highcharts.Chart(options);
-    openWebsocket(chart);
+    openWebsocket(chart, createMap());
 });
