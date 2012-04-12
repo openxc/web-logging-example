@@ -29,6 +29,37 @@ function shouldShift(series) {
     return series.data.length >= 100;
 }
 
+function openWebsocket(chart) {
+    var ws = new WebSocket("ws://" + document.domain + ":5000/records.ws");
+    ws.onmessage = function (theEvent) {
+        var data = $.parseJSON(theEvent.data);
+        $.each(data.records, function(i, record) {
+            if(record.name === "fuel_consumed_since_restart") {
+                chart.series[0].addPoint([record.timestamp, record.value], false,
+                    shouldShift(chart.series[0]));
+            } else if(record.name === "vehicle_speed") {
+                chart.series[1].addPoint([record.timestamp, record.value], false,
+                    shouldShift(chart.series[1]));
+            } else if(record.name === "latitude") {
+                arguments.callee.latitude = record.value;
+            } else if(record.name === "longitude") {
+                arguments.callee.longitude = record.value;
+            }
+
+            if(arguments.callee.latitude != undefined
+                && arguments.callee.longitude != undefined) {
+                var coordinates = new google.maps.LatLng(
+                    arguments.callee.latitude,
+                    arguments.callee.longitude);
+                mapper.path.push(coordinates);
+                mapper.marker.setPosition(coordinates);
+                arguments.callee.latitude = arguments.callee.longitude = undefined;
+            }
+        });
+        chart.redraw();
+    };
+}
+
 $(document).ready(function() {
     mapper();
 
@@ -113,66 +144,23 @@ $(document).ready(function() {
         }
     }
 
-    var chart;
-    $.get($("#chart").data('url'), function(data) {
-        var speedSeries = [];
-        var fuelSeries = [];
-        $.each(data.records, function(i, record) {
-            if(record.name == "fuel_consumed_since_restart") {
-                fuelSeries.push([record.timestamp, record.value]);
-            } else if(record.name == "vehicle_speed") {
-                speedSeries.push([record.timestamp, record.value]);
-            }
-        });
-
-        options.series = [];
-        options.series.push({name: "Fuel Consumption",
-            lineWidth: 4,
-            color: fuelColor,
-            yAxis: 1,
-            market: {
-                radius: 4
-            },
-            data: fuelSeries});
-        options.series.push({name: "Speed",
-            lineWidth: 4,
-            color: speedColor,
-            yAxis: 0,
-            market: {
-                radius: 4
-            },
-            data: speedSeries});
-
-        chart = new Highcharts.Chart(options);
-
-        var ws = new WebSocket("ws://" + document.domain + ":5000/records");
-        ws.onmessage = function (theEvent) {
-            var data = $.parseJSON(theEvent.data);
-            $.each(data.records, function(i, record) {
-                if(record.name === "fuel_consumed_since_restart") {
-                    chart.series[0].addPoint([record.timestamp, record.value], false,
-                        shouldShift(chart.series[0]));
-                } else if(record.name === "vehicle_speed") {
-                    chart.series[1].addPoint([record.timestamp, record.value], false,
-                        shouldShift(chart.series[1]));
-                } else if(record.name === "latitude") {
-                    arguments.callee.latitude = record.value;
-                } else if(record.name === "longitude") {
-                    arguments.callee.longitude = record.value;
-                }
-
-                if(arguments.callee.latitude != undefined
-                    && arguments.callee.longitude != undefined) {
-                    var coordinates = new google.maps.LatLng(
-                        arguments.callee.latitude,
-                        arguments.callee.longitude);
-                    mapper.path.push(coordinates);
-                    mapper.marker.setPosition(coordinates);
-                    arguments.callee.latitude = arguments.callee.longitude = undefined;
-                }
-            });
-            chart.redraw();
-        };
-
-    }, 'json');
+    options.series = [];
+    options.series.push({name: "Fuel Consumption",
+        lineWidth: 4,
+        color: fuelColor,
+        yAxis: 1,
+        market: {
+            radius: 4
+        },
+        data: []});
+    options.series.push({name: "Speed",
+        lineWidth: 4,
+        color: speedColor,
+        yAxis: 0,
+        market: {
+            radius: 4
+        },
+        data: []});
+    var chart = new Highcharts.Chart(options);
+    openWebsocket(chart);
 });
