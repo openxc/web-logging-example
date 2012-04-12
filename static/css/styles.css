@@ -7,9 +7,21 @@ body {
 }
 
 #map {
-  margin-left: auto;
-  margin-right: auto;
   height: 300px;
-  width: 700px;
   margin-bottom: 20px;
+}
+
+.measurement div .description {
+    margin-top: 10px;
+    font-size: 1.8em;
+}
+
+.measurement div .value {
+    padding-top: 10px;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.measurement {
+    margin-bottom: 20px;
 }

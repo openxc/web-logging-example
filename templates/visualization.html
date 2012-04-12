@@ -1,11 +1,29 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<section class="vehicle">
+<div class="row-fluid">
 
-<div id="map"></div>
+<div id="map" class="span8"></div>
 
-<div id="chart" data-url="/records"></div>
+<div class="span4 measurement">
+    <div class="row">
+        <p class="span4 description">The windshield wipers are</p>
+        <p class="span2 offset1 value" id="wiper-status">...</p>
+    </div>
+</div>
+
+<div class="span4 measurement">
+    <div class="row">
+        <p class="span4 description">The current gear is</p>
+        <p class="span2 offset1 value" id="transmission-gear">...</p>
+    </div>
+</div>
+
+</div>
+
+<div class="row-fluid">
+<div id="chart" class="span12" data-url="/records"></div>
+</div>
 
 </section>
 {% end body %}

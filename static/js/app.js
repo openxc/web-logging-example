@@ -44,6 +44,16 @@ function openWebsocket(chart) {
                 arguments.callee.latitude = record.value;
             } else if(record.name === "longitude") {
                 arguments.callee.longitude = record.value;
+            } else if(record.name === "windshield_wiper_status") {
+                var wiperText;
+                if(record.value) {
+                    wiperText = "on";
+                } else {
+                    wiperText = "off";
+                }
+                $("#wiper-status").text(wiperText);
+            } else if(record.name === "transmission_gear_position") {
+                $("#transmission-gear").text(record.value);
             }
 
             if(arguments.callee.latitude != undefined
@@ -85,7 +95,10 @@ $(document).ready(function() {
            labels: {
               align: 'left',
               x: 3,
-              y: -3
+              y: -3,
+              formatter: function() {
+                  return Highcharts.dateFormat('%I:%M:%S', this.value);
+              }
            }
         },
         yAxis: [
