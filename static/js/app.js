@@ -1,4 +1,5 @@
 function TraceMap(map) {
+    this.map = map;
     this.marker = new google.maps.Marker({
         position: map.getCenter(),
         map: map
@@ -15,6 +16,53 @@ function TraceMap(map) {
 
 TraceMap.prototype.addPoint = function(point) {
     this.path.push(point);
+    this.centerAndZoom(this.map, this.path);
+}
+
+TraceMap.prototype.centerAndZoom = function(map, path) {
+    var minLatitude = undefined;
+    var maxLatitude = undefined;
+    var minLongitude = undefined;
+    var maxLongitude = undefined;
+
+    path.forEach(function(point) {
+        var lat = point.lat();
+        var lon = point.lng();
+
+        if(minLatitude === undefined) {
+            minLatitude = lat;
+        }
+
+        if(maxLatitude === undefined) {
+            maxLatitude = lat;
+        }
+
+        if(minLongitude === undefined) {
+            minLongitude = lon;
+        }
+
+        if(maxLongitude === undefined) {
+            maxLongitude = lon;
+        }
+
+        if(lon < minLongitude) minLongitude = lon;
+        if(lon > maxLongitude) maxLongitude = lon;
+        if(lat < minLatitude) minLatitude = lat;
+        if(lat > maxLatitude) maxLatitude = lat;
+    });
+
+    if(minLatitude === undefined || maxLatitude === undefined
+            || minLongitude === undefined || maxLongitude === undefined) {
+        return;
+    }
+
+    var centerLongitude = (maxLongitude + minLongitude) / 2;
+    var centerLatitude = (maxLatitude + minLatitude) / 2;
+
+    map.setCenter(new google.maps.LatLng(centerLatitude, centerLongitude));
+    map.fitBounds(new google.maps.LatLngBounds(
+            new google.maps.LatLng(minLatitude - .001, minLongitude - .001),
+            new google.maps.LatLng(maxLatitude + .001, maxLongitude + .001)));
 }
 
 function createMap() {
