@@ -3,6 +3,7 @@
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
+import threading
 from tornado.options import options
 
 from settings import settings
@@ -16,8 +17,14 @@ class DataRecorder(tornado.web.Application):
 
 
 def main():
-    app = DataRecorder()
+    from handlers.records import queue_listener
+    event_thread = threading.Thread(target=queue_listener)
+    event_thread.daemon = True
+    event_thread.start()
+
     make_trace_folder(settings)
+
+    app = DataRecorder()
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
