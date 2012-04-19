@@ -25,3 +25,7 @@ body {
 .measurement {
     margin-bottom: 20px;
 }
+
+#chart {
+    height: 300px;
+}
