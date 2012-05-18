@@ -35,6 +35,12 @@ Using Fabric:
 
     $ fab runserver
 
+## Test data
+
+You can send test data with a Fabric command:
+
+    $ fab send_test_data:path_to_trace.json
+
 ## API
 
 All API calls accept JSON. There is no authentication.
