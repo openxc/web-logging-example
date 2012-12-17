@@ -131,8 +131,7 @@ $(document).ready(function() {
         chart: {
             renderTo: 'chart',
             animation: {
-                enabled: true,
-                easing: "linear"
+                enabled: false
             }
         },
         legend: {
@@ -203,7 +202,12 @@ $(document).ready(function() {
         plotOptions: {
            series: {
               marker: {
-                 lineWidth: 1
+                  enabled: false
+              }
+           },
+           line: {
+              marker: {
+                  enabled: false
               }
            }
         }
