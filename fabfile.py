@@ -46,7 +46,7 @@ def send_test_data(filename):
         target_time = starting_time + (timestamp - first_timestamp)
         sleep_duration = target_time - time.time()
         if sleep_duration > 0:
-            time.sleep(sleep_duration)
+            time.sleep(sleep_duration + 1)
 
     while True:
         starting_time = time.time()
@@ -55,15 +55,12 @@ def send_test_data(filename):
             records = []
             with open(filename, 'r') as trace_file:
                 for line in trace_file:
-                    timestamp, record = line.split(':', 1)
-                    timestamp = float(timestamp)
-                    record = json.loads(record)
-                    record['timestamp'] = timestamp
+                    record = json.loads(line)
 
                     if first_timestamp is None:
-                        first_timestamp = timestamp
+                        first_timestamp = record['timestamp']
                     wait_for_next_record(starting_time, first_timestamp,
-                            timestamp)
+                            record['timestamp'])
                     records.append(record)
 
                     if len(records) == 25:
