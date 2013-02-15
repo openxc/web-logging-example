@@ -65,6 +65,7 @@ def send_test_data(filename):
 
                     if len(records) == 25:
                         send_records(records)
+                        time.sleep(.5)
                         records = []
         except IOError:
             print("No active trace file found at %s" % filename)
