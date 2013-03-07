@@ -120,7 +120,6 @@ function openWebsocket(chart, map) {
                 arguments.callee.latitude = arguments.callee.longitude = undefined;
             }
         });
-        chart.redraw();
     };
 }
 
@@ -232,5 +231,6 @@ $(document).ready(function() {
         data: []});
 
     var chart = new Highcharts.Chart(options);
+    window.setInterval(chart.redraw, 2000);
     openWebsocket(chart, createMap());
 });
