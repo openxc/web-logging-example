@@ -1,7 +1,5 @@
 from fabric.api import *
 
-env.hosts = ['fiesta.eecs.umich.edu']
-
 def setup():
     """Installs all Python package dependencies."""
     local("pip install -r pip-requirements.txt")
