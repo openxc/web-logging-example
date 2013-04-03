@@ -2,9 +2,10 @@ OpenXC Web Logging Example Application
 ================================
 
 This is a small Python web application (using the Tornado framework) that
-receives trace messages from an OpenXC data recorder and writes them out to
-disk, split by hour. It supports visualizing a single vehicle's data in
-real-time.
+receives trace messages from an [OpenXC](http://openxcplatform.com)-enabled and
+network-connected device and them out to disk, split by hour. It supports
+visualizing a single vehicle's data in real-time using HighCharts and Google
+Maps.
 
 This application is intended as a proof-of-concept and is lacking in quite a few
 areas - please do take this as a starting point for a web-enabled OpenXC
@@ -49,9 +50,15 @@ You can send test data with a Fabric command:
 
 ## API
 
-All API calls accept JSON. There is no authentication.
+All API calls accept JSON. There is no authentication (seriously, don't try and
+run this example app in production!).
 
-### Create a Vehicle
+### Create new log records
+
+The format of the individual log messages should match the [output
+format](http://openxcplatform.com/vehicle-interface/output-format.html) from an
+OpenXC [vehicle
+interface](http://openxcplatform.com/vehicle-interface/index.html).
 
     POST /records
 
