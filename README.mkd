@@ -1,8 +1,13 @@
-Data Recorder Receiver
+OpenXC Web Logging Example Application
 ================================
 
 This is a small web application that receives trace messages from an OpenXC data
-recorder and writes them out to disk, split by hour.
+recorder and writes them out to disk, split by hour. It supports visualizing a
+single vehicle's data in real-time.
+
+This application is intended as a proof-of-concept and is lacking in quite a few
+areas - please do take this as a starting point for a web-enabled OpenXC
+application, but don't expect this to be production-ready out of the box!
 
 ## Installation
 
