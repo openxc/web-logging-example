@@ -20,8 +20,8 @@ have it already):
 
 Next, clone this repository and install the Python requirements:
 
-    $ git clone git@github.com:data-recorder
-    $ cd data-recorder
+    $ git clone https://github.com/openxc/web-logging-example.git
+    $ cd web-logging-example
     $ pip install -r pip-requirements.txt
 
 While not required, I also recommend installing [Fabric][] - it's a command-line
