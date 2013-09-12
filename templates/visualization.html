@@ -1,29 +1,175 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="row-fluid">
+<div class="row">
+    <div class="span7">
+        <div id="map"></div>
+    </div>
+    <div class="span4">
+        <a href="http://openxcplatform.com"><img class="logo" src="static/img/openxc-logo.png"
+                    alt="OpenXC Visualization"/></a>
+        <p>This map and graphs are visualizations of data collected
+            using the <a href="http://openxcplatform.com">OpenXC
+                Platform</a>. OpenXC is an <a
+                    href="https://github.com/openxc">open source</a>
+                software and hardware platform to pull data from your
+                car and use it like any other data source in a
+                smartphone, tablet or web application. For more
+                information on OpenXC, visit the
+            <a href="http://openxcplatform.com">project page</a>.
+        </p>
+        <p>If you reached this page because of <strong>New York International Auto
+                Show</strong> coverage, don't miss the <a
+                    href="http://ford.challengepost.com">Ford
+                Personalized Fuel Efficiency App Challenge</a>.
+        </p>
+        <p>These visualizations are compatible with IE9+, Google Chrome, Safari,
+            and Mozilla Firefox. The map overlays can be toggled via the
+            layers button. The <a
+                    href="https://github.com/openxc/trace-analyzer">source</a>
+            for this visualization is available on GitHub</p>
 
-<div id="map" class="span8"></div>
+        <label for="traces">Select a Trace File</label>
+        <select id="traces">
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-crosstown.json">NYC - Downtown, Crosstown</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-east.json">NYC - East Downtown</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-west2.json">NYC - West Downtown</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-west.json">NYC - West Downtown 2</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-crossdown.json">NYC - Uptown Crosstown</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-crosstown.json">NYC - Uptown Crosstown 2</option>
+            <option selected value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-west2.json">NYC - West Uptown </option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-west.json">NYC - West Uptown</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/localwithgps.json">Highway Commute and Local Stop</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/aggressive-driving.json">Aggressive Driving (no GPS or fuel consumption)</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/commute.json">Commute</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/commute2.json">Another Commute</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/highway-speeding.json">Highway Speeding (no GPS)</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/idling.json">Idling (no GPS)</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/riding-brakes.json">Riding the Brakes (no GPS)</option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/tailgating.json">Tailgating (no GPS)</option>
+        </select>
+        <p id="trace-status"><span>Loading...</span><i class="icon-ok"></i></p>
 
-<div class="span4 measurement">
-    <div class="row">
-        <p class="span4 description">The windshield wipers are</p>
-        <p class="span2 offset1 value" id="wiper-status">...</p>
+        <dl>
+
+          <dt>Green Line</dt>
+          <dd>Overall GPS trace</dd>
+
+          <dt>Red shaded portions</dt>
+          <dd>Travelling below normal speed limit</dd>
+
+          <dt>Blue circle</dt>
+          <dd>Starting point</dd>
+
+          <dt>Green circle</dt>
+          <dd>Ending point</dd>
+
+          <dt>Red circles</dt>
+          <dd>Stops</dd>
+
+        </dl>
+
+        <!-- <p class="current-data">Current timestamp: <span -->
+                    <!-- id="current_timestamp"></span></p> -->
+
     </div>
 </div>
 
-<div class="span4 measurement">
-    <div class="row">
-        <p class="span4 description">The current gear is</p>
-        <p class="span2 offset1 value" id="transmission-gear">...</p>
+
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="fuel_consumed_since_restart" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Fuel Consumed</h3>
+        <p class="delayed"><span id="fuel-efficiency"></span> MPG Overall</p>
+        <p class="delayed"><span id="total-fuel-consumed"></span>
+          Gallons == ~$<span id="total-fuel-cost"></span> Total
+          (@ $<span id="average-fuel-cost"></span>/gallon)</p>
+
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="cumulativeFuelEfficiency" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Fuel Efficiency</h3>
+        <p>Shaded areas == brake pressed</p>
+        <p class="current-data"><span id="current_cumulativeFuelEfficiency"></span> MPG Cumulative</p>
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container histogram">
+        <!-- TODO if we don't override the width here it's too small, css isn't working-->
+        <canvas id="gear-histogram" width="540" class="graph"></canvas>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Gear Position</h3>
+        <p><span id="current_gear_position"></span></p>
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="vehicle_speed" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Vehicle Speed</h3>
+        <p class="current-data"><span id="current_vehicle_speed"></span> Kph</p>
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="engine_speed" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Engine Speed</h3>
+        <p class="current-data"><span id="current_engine_speed"></span> RPM</p>
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="torque_at_transmission" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Torque</h3>
+        <p class="current-data"><span id="current_torque_at_transmission"></span> Nm</p>
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="accelerator_pedal_position" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Accel. Pedal (%)</h3>
+        <p class="current-data"><span id="current_accelerator_pedal_position"></span>%</p>
+    </div>
+</div>
+<div class="row">
+    <div class="span7 graph-container">
+        <div id="odometer" class="graph"></div>
+    </div>
+    <div class="span4 graph-comments">
+        <h3>Odometer</h3>
+        <p class="current-data"><span id="current_odometer"></span> Km</p>
     </div>
 </div>
 
-</div>
+<div class="row">
+    <footer class="span12">
+        {% block footer %}
+        {% end footer %}
+        <p>
+            Content on this page generated with data from the <a
+                    href="http://openxcplatform.com">OpenXC Platform</a>
+            and sponsored by Ford Motor Company.
+        </p>
 
-<div class="row-fluid">
-<div id="chart" class="span12" data-url="/records"></div>
+        <p>
+            Except as otherwise noted, the content of this page is licensed
+            under the
+            <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License.</a>
+        </p>
+    </footer>
 </div>
-
-</section>
 {% end body %}

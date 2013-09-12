@@ -1,0 +1,88 @@
+body {
+    font-size: 12px;
+}
+
+#map {
+    height: 680px;
+    width: 540px;
+}
+
+.graph-comments {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.graph-container {
+    padding-top: 10px;
+    padding-bottom: 15px;
+    height: 100px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.graph-container.histogram, .graph-container.histogram canvas {
+    height: 150px;
+}
+
+.graph path {
+    stroke: steelblue;
+    stroke-width: 1;
+    fill: none;
+}
+
+.graph {
+    position: absolute;
+    height: 100px;
+    width: 540px;
+}
+
+#download-progress {
+    font-weight: bold
+}
+
+#analysis-progress {
+    font-weight: bold;
+}
+
+.graph .hover-line {
+    stroke: #6E7B8B;
+}
+
+.graph .max-line {
+    stroke: red;
+}
+
+.graph .average-line {
+    stroke: green;
+}
+
+.graph .brake-event {
+    fill: #FF6666;
+}
+
+.graph text.annotation {
+    font-size: 10px;
+    font-weight: normal;
+    stroke: black;
+    opacity: 1;
+}
+
+.current-data {
+    display: none;
+}
+
+.delayed {
+    display: none;
+}
+
+footer {
+    margin-top: 30px;
+}
+
+img.logo {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#trace-status {
+    display: inline;
+}

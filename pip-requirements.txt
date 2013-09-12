@@ -1,3 +1,7 @@
+Fabric==1.7.0
+paramiko==1.11.0
+pycrypto==2.6
+requests==1.2.3
+tornado==3.1.1
 unittest2==0.5.1
-tornado==2.4.1
-requests==0.11.1
+wsgiref==0.1.2
