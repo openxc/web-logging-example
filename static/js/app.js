@@ -74,7 +74,7 @@ $(document).ready(function() {
     }).change();
 
     // TODO let users disable this
-    window.setTimeout(window.location.reload.bind(window.location), 60000);
+    window.setTimeout(window.location.reload.bind(window.location), 60000 * 5);
     // TODO make use of the web socket interface to update the graph and
     // locaiton on the fly
 });
