@@ -72,4 +72,9 @@ $(document).ready(function() {
         loadTrace($("#traces option:selected").val());
         return false;
     }).change();
+
+    // TODO let users disable this
+    window.setTimeout(window.location.reload.bind(window.location), 60000);
+    // TODO make use of the web socket interface to update the graph and
+    // locaiton on the fly
 });
