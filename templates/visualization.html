@@ -8,7 +8,7 @@
         <div id="map"></div>
         <label for="traces">Select a Trace File</label>
         <select id="traces">
-            <option selected value="/traces/{{ trace_filenames[0] }}">{{ trace_filenames[0].split(".json")[0] }}</option>
+            <option selected value="/traces/{{ trace_filenames[0] }}">Live feed (started {{ trace_filenames[0].split(".json")[0] }})</option>
             {% for trace_filename in trace_filenames[1:] %}
             <option value="/traces/{{ trace_filename }}">{{ trace_filename.split(".json")[0] }}</option>
             {% end %}
@@ -146,11 +146,15 @@
                 information on OpenXC, visit the
             <a href="http://openxcplatform.com">project page</a>.
         </p>
-        <p>If you reached this page because of <strong>New York International Auto
-                Show</strong> coverage, don't miss the <a
-                    href="http://ford.challengepost.com">Ford
-                Personalized Fuel Efficiency App Challenge</a>.
-        </p>
+
+        <p>The visualization is now showing a <strong>live</strong> trace as
+            Chris drives from Ann Arbor, MI to Pittsburgh, PA to host the <a
+                    href="http://techshop.ws/Events.html?&action=detail&id=846">OpenXC
+                workshop at TechShop this weekend</a>, September 13th and 14th,
+            2013. Refresh the page to see the latest data! You can also select
+            one of the previously recorded trace files from the dropdown menu
+            below the map.</p>
+
         <p>These visualizations are compatible with IE9+, Google Chrome, Safari,
             and Mozilla Firefox. The map overlays can be toggled via the
             layers button. The <a
