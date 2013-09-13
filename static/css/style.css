@@ -2,9 +2,14 @@ body {
     font-size: 12px;
 }
 
+.graph-comments p {
+    font-size: 10px;
+    margin: 0;
+}
+
 #map {
-    height: 680px;
-    width: 540px;
+    height: 350px;
+    width: 385px;
 }
 
 .graph-comments {
@@ -13,14 +18,13 @@ body {
 }
 
 .graph-container {
-    padding-top: 10px;
-    padding-bottom: 15px;
-    height: 100px;
-    border-bottom: 1px solid lightgrey;
+    padding-top: 8px;
+    padding-bottom: 5px;
+    height: 50px;
 }
 
 .graph-container.histogram, .graph-container.histogram canvas {
-    height: 150px;
+    height: 75px;
 }
 
 .graph path {
@@ -31,8 +35,8 @@ body {
 
 .graph {
     position: absolute;
-    height: 100px;
-    width: 540px;
+    height: 50px;
+    width: 385px;
 }
 
 #download-progress {
