@@ -31,13 +31,17 @@
 
         <label for="traces">Select a Trace File</label>
         <select id="traces">
+            <option selected value="/traces/{{ trace_filenames[0] }}">{{ trace_filenames[0].split(".json")[0] }}</option>
+            {% for trace_filename in trace_filenames[1:] %}
+            <option value="/traces/{{ trace_filename }}">{{ trace_filename.split(".json")[0] }}</option>
+            {% end %}
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-crosstown.json">NYC - Downtown, Crosstown</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-east.json">NYC - East Downtown</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-west2.json">NYC - West Downtown</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/downtown-west.json">NYC - West Downtown 2</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-crossdown.json">NYC - Uptown Crosstown</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-crosstown.json">NYC - Uptown Crosstown 2</option>
-            <option selected value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-west2.json">NYC - West Uptown </option>
+            <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-west2.json">NYC - West Uptown </option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/nyc/uptown-west.json">NYC - West Uptown</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/localwithgps.json">Highway Commute and Local Stop</option>
             <option value="http://openxcplatform.com.s3.amazonaws.com/traces/aggressive-driving.json">Aggressive Driving (no GPS or fuel consumption)</option>
