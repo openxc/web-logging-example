@@ -141,6 +141,13 @@ var mapRenderHandler = {
                 }
             });
 
+            if(path.getLatLngs().length < 2) {
+                // TODO if there is only 1 GPS location in the trace getBounds
+                // will throw an exception, so we hack around that here.
+                path.addLatLng([lastPosition.latitude + .000001,
+                        lastPosition.longitude + .000001]);
+            }
+
             var start = new L.CircleMarker(_.first(path.getLatLngs()),
                     {color: "blue"});
             var end = new L.CircleMarker(_.last(path.getLatLngs()),
