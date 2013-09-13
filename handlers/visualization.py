@@ -10,7 +10,7 @@ class VisualizationHandler(BaseHandler):
     def get(self):
         trace_filenames = [os.path.join(settings['trace_folder'], filename)
                 for filename in os.listdir(settings['trace_folder'])]
-        trace_filenames.sort(key=lambda x: os.path.getmtime(x))
+        trace_filenames.sort(key=lambda x: os.path.getmtime(x), reverse=True)
         trace_filenames = [trace_filename.split('/')[1] for trace_filename in
                 trace_filenames]
         self.render("visualization.html", trace_filenames=trace_filenames)
