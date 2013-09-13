@@ -8,7 +8,9 @@
         <div id="map"></div>
         <label for="traces">Select a Trace File</label>
         <select id="traces">
+            {% if len(trace_filenames) > 0 %}
             <option selected value="/traces/{{ trace_filenames[0] }}">Live feed (started {{ trace_filenames[0].split(".json")[0] }})</option>
+            {% end %}
             {% for trace_filename in trace_filenames[1:] %}
             <option value="/traces/{{ trace_filename }}">{{ trace_filename.split(".json")[0] }}</option>
             {% end %}
