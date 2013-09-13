@@ -45,7 +45,7 @@ settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "your-cookie-secret"
 settings['xsrf_cookies'] = False
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
-settings['trace_file_switch_timeout'] = 60 * 5
+settings['trace_file_switch_timeout'] = 60 * 20
 
 SYSLOG_TAG = "recorder"
 SYSLOG_FACILITY = logging.handlers.SysLogHandler.LOG_LOCAL2
