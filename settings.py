@@ -6,7 +6,7 @@ import tornado.template
 import os
 from tornado.options import define, options
 
-import logconfig
+#import logconfig
 
 # Make filepaths relative to settings.
 path = lambda root,*a: os.path.join(root, *a)
@@ -45,6 +45,7 @@ settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "your-cookie-secret"
 settings['xsrf_cookies'] = False
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
+settings['trace_file_switch_timeout'] = 60 * 20
 
 SYSLOG_TAG = "recorder"
 SYSLOG_FACILITY = logging.handlers.SysLogHandler.LOG_LOCAL2
@@ -67,8 +68,11 @@ else:
     LOG_LEVEL = logging.INFO
 USE_SYSLOG = DEPLOYMENT != DeploymentType.SOLO
 
-logconfig.initialize_logging(SYSLOG_TAG, SYSLOG_FACILITY, LOGGERS,
-        LOG_LEVEL, USE_SYSLOG)
+# this isn't working with the latest verision of torando - killing it for now,
+# but need to investigate why we needed to customize and how to make it work
+# again if necessary
+# logconfig.initialize_logging(SYSLOG_TAG, SYSLOG_FACILITY, LOGGERS,
+        # LOG_LEVEL, USE_SYSLOG)
 
 if options.config:
     tornado.options.parse_config_file(options.config)

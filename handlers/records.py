@@ -3,7 +3,6 @@ import json
 import collections
 
 from util import generate_filename
-from util import massage_record
 from settings import settings
 from handlers.base import BaseHandler, BaseWebSocketHandler
 
@@ -31,9 +30,7 @@ class RecordsHandler(BaseHandler):
         records = self.get_json_argument('records', None)
         with open(generate_filename(settings), 'a') as trace_file:
             for record in records:
-                timestamp = record.pop('timestamp')
-                trace_file.write("%s: %s\r\n" % (timestamp, json.dumps(record)))
-                record = massage_record(record, float(timestamp))
+                trace_file.write("%s\r\n" % json.dumps(record))
                 RECORD_QUEUE.put(record)
         self.set_status(201)
 

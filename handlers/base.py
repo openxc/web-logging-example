@@ -31,8 +31,7 @@ class BaseHandler(tornado.web.RequestHandler):
         """
         if default is None:
             default = self._ARG_DEFAULT
-        if not self.request.arguments:
-            self.load_json()
+        self.load_json()
         if name not in self.request.arguments:
             if default is self._ARG_DEFAULT:
                 msg = "Missing argument '%s'" % name
